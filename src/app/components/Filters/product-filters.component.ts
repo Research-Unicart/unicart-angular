@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -8,6 +9,7 @@ import { RouterModule } from '@angular/router';
   imports: [
       CommonModule,
       RouterModule,
+      FormsModule
     ]
 })
 export class ProductFiltersComponent implements OnInit {
@@ -23,7 +25,6 @@ export class ProductFiltersComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // Initialize filters with priceRange input
     this.filters.priceRange = [this.priceRange.min, this.priceRange.max];
   }
 
