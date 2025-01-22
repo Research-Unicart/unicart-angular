@@ -3,9 +3,14 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  template: `
+    <div class="min-h-screen bg-gray-50">
+      <router-outlet></router-outlet>
+    </div>
+  `,
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'unicart-angular';

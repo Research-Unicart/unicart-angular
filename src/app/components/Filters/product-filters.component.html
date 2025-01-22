@@ -1,0 +1,83 @@
+<div class="space-y-6 p-4 bg-white rounded-lg shadow">
+  <!-- Sort By -->
+  <div>
+    <h3 class="text-lg font-semibold mb-3">Sort By</h3>
+    <select
+      (change)="handleFilterChange({ sortBy: filters.sortBy })"
+      class="w-full p-2 border rounded-lg"
+    >
+      <option value="popularity">Popularity</option>
+      <option value="priceLowToHigh">Price: Low to High</option>
+      <option value="priceHighToLow">Price: High to Low</option>
+      <option value="newest">Newest First</option>
+    </select>
+  </div>
+
+  <div>
+    <h3 class="text-lg font-semibold mb-3">Categories</h3>
+    <div class="space-y-2">
+      <label class="flex items-center">
+        <input
+          type="radio"
+          name="category"
+          value="all"
+          [checked]="filters.category === 'all'"
+          (change)="handleFilterChange({ category: 'all' })"
+          class="mr-2"
+        />
+        All Categories
+      </label>
+      <label *ngFor="let category of categories" class="flex items-center">
+        <input
+          type="radio"
+          name="category"
+          [value]="category"
+          [checked]="filters.category === category"
+          (change)="handleFilterChange({ category: category })"
+          class="mr-2"
+        />
+        {{ category }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Rating -->
+  <div>
+    <h3 class="text-lg font-semibold mb-3">Rating</h3>
+    <div class="space-y-2">
+      <label *ngFor="let rating of [0, 4, 3, 2, 1]" class="flex items-center">
+        <input
+          type="radio"
+          name="rating"
+          [value]="rating"
+          [checked]="filters.rating === rating"
+          (change)="handleFilterChange({ rating: rating })"
+          class="mr-2"
+        />
+        <ng-container *ngIf="rating === 0">All Ratings</ng-container>
+        <ng-container *ngIf="rating > 0">
+          <span class="flex items-center">
+            <ng-container *ngFor="let star of [].constructor(5); let idx = index">
+              <span
+                class="text-sm"
+                [class.text-yellow-400]="idx < rating"
+                [class.text-gray-300]="idx >= rating"
+              >
+                ★
+              </span>
+            </ng-container>
+            <span class="ml-2">& up</span>
+          </span>
+        </ng-container>
+      </label>
+    </div>
+  </div>
+
+  <!-- Clear Filters -->
+  <button
+    (click)="clearFilters()"
+    class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
+  >
+    Clear All Filters
+  </button>
+</div>

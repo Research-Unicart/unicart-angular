@@ -1,0 +1,60 @@
+<div class="space-y-8">
+  <section class="relative h-96 bg-gray-900 rounded-xl overflow-hidden">
+    <img src="/images/22.jpg" alt="Hero" class="w-full h-full object-cover opacity-75" />
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="text-center text-white">
+        <h1 class="text-4xl font-bold mb-4">Summer Sale</h1>
+        <p class="text-xl mb-6">Up to 50% off on selected items</p>
+        <button class="bg-blue-600 px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Shop Now</button>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold">Featured Products</h2>
+      <a routerLink="/products" class="text-blue-600 hover:text-blue-700 flex items-center transition-colors">
+        View All
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+
+      </a>
+    </div>
+
+    <div *ngIf="error" class="mb-6">
+      <p>{{ error }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <ng-container *ngIf="loading; else productGrid">
+        <div *ngFor="let _ of [1, 2, 3, 4, 5, 6, 7, 8]" class="animate-pulse">
+          <div class="bg-gray-200 h-48 rounded-lg mb-4"></div>
+          <div class="h-4 bg-gray-200 rounded mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+        </div>
+      </ng-container>
+      <ng-template #productGrid>
+        <app-product-card *ngFor="let product of featuredProducts" [product]="product"></app-product-card>
+      </ng-template>
+    </div>
+  </section>
+  <section class="bg-gray-100 rounded-xl p-8 text-center">
+    <h2 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+    <p class="text-gray-600 mb-6">Get updates about new products and special offers</p>
+    <form (submit)="handleSubscribe($event)" class="max-w-md mx-auto">
+      <div class="flex">
+        <input type="email" name="email" placeholder="Enter your email"
+          class="flex-1 px-4 py-2 rounded-l-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required />
+        <button type="submit" [disabled]="subscribeLoading"
+          class="bg-blue-600 text-white px-6 py-2 rounded-r-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ subscribeLoading ? 'Subscribing...' : 'Subscribe' }}
+        </button>
+      </div>
+      <!-- <p *ngIf="subscribeMessage" [ngClass]="{'text-green-600': subscribeMessage.type === 'success', 'text-red-600': subscribeMessage.type === 'error'}" class="mt-2 text-sm">
+        {{ subscribeMessage.text }}
+      </p> -->
+    </form>
+  </section>
+</div>

@@ -1,0 +1,18 @@
+<div *ngIf="loading" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+  <div *ngFor="let _ of loadingPlaceholder" class="bg-white rounded-lg shadow-md p-4 animate-pulse">
+    <div class="h-48 bg-gray-200 rounded mb-4"></div>
+    <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+  </div>
+</div>
+
+<div *ngIf="error" class="text-center py-8">
+  <p class="text-red-500">{{ error }}</p>
+  <button (click)="retry()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    Retry
+  </button>
+</div>
+
+<div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+  <app-product-card *ngFor="let product of products" [product]="product"></app-product-card>
+</div>

@@ -1,0 +1,110 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div *ngIf="loading" class="animate-pulse space-y-8">
+    <div class="aspect-square bg-gray-200 rounded-lg w-full"></div>
+    <div class="space-y-4">
+      <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+      <div class="h-6 bg-gray-200 rounded w-1/2"></div>
+    </div>
+  </div>
+
+  <div *ngIf="error || !product" class="bg-red-50 p-4 rounded-lg">
+    <p class="text-red-600 text-center">{{ error || 'Product not found' }}</p>
+  </div>
+
+  <div *ngIf="!loading && product" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="space-y-4">
+      <div class="aspect-square rounded-lg overflow-hidden">
+        <img [src]="product.images[selectedImageIndex]" [alt]="product.name" class="w-full h-full object-cover" />
+      </div>
+      <div *ngIf="product.images.length > 1" class="grid grid-cols-4 gap-4">
+        <button *ngFor="let image of product.images; let idx = index" (click)="selectedImageIndex = idx" [class]="'aspect-square rounded-lg overflow-hidden border-2 ' +
+            (selectedImageIndex === idx ? 'border-blue-600' : 'border-gray-200')">
+          <img [src]="image" [alt]="product.name + ' view ' + (idx + 1)" class="w-full h-full object-cover" />
+        </button>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold">{{ product.name }}</h1>
+        <div class="flex items-center mt-2 space-x-4">
+          <div class="flex items-center">
+            <svg *ngFor="let star of getStarArray()"
+              [class]="'w-5 h-5 ' + (star < product.rating ? 'text-yellow-400 fill-current' : 'text-gray-300')"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            <span class="ml-2 text-gray-600">({{ product.rating }})</span>
+          </div>
+          <span class="text-gray-600">{{ product.category }}</span>
+        </div>
+      </div>
+
+      <div class="flex items-baseline space-x-2">
+        <span class="text-3xl font-bold">Rs. {{ getCurrentPrice().toFixed(2) }}</span>
+        <span *ngIf="getCurrentStock() > 0" class="text-sm text-gray-600">
+          {{ getCurrentStock() }} units available
+        </span>
+      </div>
+
+      <div *ngIf="product.variations?.length > 0" class="space-y-2">
+        <h3 class="font-semibold">Storage Options</h3>
+        <div class="flex flex-wrap gap-2">
+          <button *ngFor="let variation of product.variations" (click)="handleVariationChange(variation)" [class]="'px-4 py-2 rounded-lg border ' +
+              (selectedVariation?.id === variation.id
+                ? 'border-blue-600 bg-blue-50 text-blue-600'
+                : 'border-gray-300 hover:border-gray-400')">
+            {{ variation.variation }}
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="font-semibold">Quantity</h3>
+        <div class="flex items-center space-x-4">
+          <button (click)="handleQuantityChange(-1)" class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+            [disabled]="quantity <= 1">
+            -
+          </button>
+          <span class="w-12 text-center font-medium">{{ quantity }}</span>
+          <button (click)="handleQuantityChange(1)" class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+            [disabled]="quantity >= getCurrentStock()">
+            +
+          </button>
+        </div>
+      </div>
+
+      <div class="flex space-x-4">
+        <button (click)="handleAddToCart()"
+          class="flex-1 px-6 py-3 rounded-lg flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white"
+          [disabled]="isOutOfStock">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span>{{ isOutOfStock ? 'Out of Stock' : 'Add to Cart' }}</span>
+        </button>
+        <button (click)="navigateToCart()"
+          class="px-6 py-3 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50">
+          View Cart
+        </button>
+      </div>
+
+      <div class="space-y-2">
+        <h3 class="font-semibold">Product Specifications</h3>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div *ngFor="let spec of product.specs | keyvalue" class="flex flex-col">
+            <dt class="text-gray-600">{{ spec.key }}</dt>
+            <dd class="font-medium">{{ spec.value }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div *ngIf="product.description" class="space-y-2">
+        <h3 class="font-semibold">Description</h3>
+        <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>

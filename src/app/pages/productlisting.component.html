@@ -1,0 +1,44 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">All Products</h1>
+    <span class="text-gray-600">Showing {{ filteredProducts.length }} products</span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <aside class="lg:col-span-1">
+      <app-product-filters [categories]="categories" [priceRange]="priceRange"
+        (filterChange)="handleFilterChange($event)"></app-product-filters>
+    </aside>
+
+    <div class="lg:col-span-3">
+      <div *ngIf="loading" class="flex justify-center items-center h-96">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+
+      <div *ngIf="error" class="text-center py-12">
+        <p class="text-red-500 mb-4">{{ error }}</p>
+        <button (click)="handleRetry()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Try Again
+        </button>
+      </div>
+
+      <div *ngIf="!loading && !error">
+        <div *ngIf="filteredProducts.length === 0" class="text-center py-12">
+          <p class="text-gray-500">No products match your filters.</p>
+        </div>
+
+        <div *ngIf="filteredProducts.length > 0">
+          <app-product-grid [products]="filteredProducts.slice(
+              (currentPage - 1) * productsPerPage,
+              currentPage * productsPerPage
+            )"></app-product-grid>
+
+          <div class="mt-8 flex justify-center">
+            <app-pagination [currentPage]="currentPage" [totalItems]="filteredProducts.length"
+              [itemsPerPage]="productsPerPage" (pageChange)="onPageChange($event)"></app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

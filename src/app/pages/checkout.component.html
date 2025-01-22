@@ -1,0 +1,224 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-8">Checkout</h1>
+
+  <div *ngIf="cart.length === 0" class="max-w-7xl mx-auto px-4 py-8 text-center">
+    <h1 class="text-2xl font-bold mb-4">Your cart is empty</h1>
+    <button (click)="window.history.back()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+      Return to Shopping
+    </button>
+  </div>
+
+  <form *ngIf="cart.length > 0" (ngSubmit)="handleSubmit($event)" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-8">
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Contact Information</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <input type="text" name="firstName" placeholder="First Name" required [value]="formData.firstName"
+            (input)="handleInputChange($event, 'firstName')"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input type="text" name="lastName" placeholder="Last Name" [value]="formData.lastName"
+            (input)="handleInputChange($event, 'lastName')" required
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <input type="email" name="email" placeholder="Email Address" [value]="formData.email"
+          (input)="handleInputChange($event, 'email')" required
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        <input type="tel" name="phone" placeholder="Phone Number" [value]="formData.phone"
+          (input)="handleInputChange($event, 'phone')" required
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Shipping Address</h2>
+        <input type="text" name="street" placeholder="Street Address" [value]="formData.street"
+          (input)="handleInputChange($event, 'street')" required
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        <input type="text" name="apartment" placeholder="Apartment, suite, etc. (optional)" [value]="formData.apartment"
+          (input)="handleInputChange($event, 'apartment')"
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        <div class="grid grid-cols-3 gap-4">
+          <input type="text" name="city" placeholder="City" required [value]="formData.city"
+            (input)="handleInputChange($event, 'city')"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input type="text" name="state" placeholder="State" required [value]="formData.state"
+            (input)="handleInputChange($event, 'state')"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <input type="text" name="zip" placeholder="ZIP Code" required [value]="formData.zip"
+            (input)="handleInputChange($event, 'zip')"
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Shipping Method</h2>
+        <div class="space-y-2">
+          <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input type="radio" name="shipping" value="standard" [checked]="shippingMethod === 'standard'"
+              (change)="onShippingMethodChange($event)" class="mr-4" />
+            <div class="flex-1">
+              <div class="font-semibold">Standard Shipping</div>
+              <div class="text-sm text-gray-600">4-5 business days</div>
+            </div>
+            <div class="font-semibold">Rs. 10.00</div>
+          </label>
+
+          <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input type="radio" name="shipping" value="express" [checked]="shippingMethod === 'express'"
+              (change)="onShippingMethodChange($event)" class="mr-4" />
+            <div class="flex-1">
+              <div class="font-semibold">Express Shipping</div>
+              <div class="text-sm text-gray-600">2-3 business days</div>
+            </div>
+            <div class="font-semibold">Rs. 20.00</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Payment Method</h2>
+        <div class="space-y-4">
+          <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input type="radio" name="payment" value="credit" [checked]="paymentMethod === 'credit'"
+              (change)="onPaymentMethodChange($event)" class="mr-4" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4 text-gray-600" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+
+            <span class="font-semibold">Credit Card</span>
+          </label>
+
+          <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <input type="radio" name="payment" value="cod" [checked]="paymentMethod === 'cod'"
+              (change)="onPaymentMethodChange($event)" class="mr-4" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-4 text-gray-600" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 2v4h12V2m-6 6V4M5 10h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2v-8a2 2 0 012-2z" />
+            </svg>
+
+
+            <span class="font-semibold">Cash on Delivery</span>
+          </label>
+
+          <div *ngIf="paymentMethod === 'credit'" class="space-y-4">
+            <div class="space-y-4 p-4 border rounded-lg">
+              <div>
+                <input type="text" name="cardNumber" placeholder="Card Number" required maxlength="19"
+                  [class.border-red-500]="errors['cardNumber']"
+                  class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  (input)="formatCardNumber($event)" />
+                <p *ngIf="errors['cardNumber']" class="text-red-500 text-sm mt-1">
+                  {{ errors['cardNumber'] }}
+                </p>
+              </div>
+
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <input type="text" name="expiry" placeholder="MM/YY" required maxlength="5"
+                    [class.border-red-500]="errors['expiry']"
+                    class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    (input)="formatExpiry($event)" />
+                  <p *ngIf="errors['expiry']" class="text-red-500 text-sm mt-1">
+                    {{ errors['expiry'] }}
+                  </p>
+                </div>
+
+                <div>
+                  <input type="text" name="cvv" placeholder="CVV" required maxlength="4"
+                    [class.border-red-500]="errors['cvv']"
+                    class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    (input)="formatCVV($event)" />
+                  <p *ngIf="errors['cvv']" class="text-red-500 text-sm mt-1">
+                    {{ errors['cvv'] }}
+                  </p>
+                </div>
+
+                <div>
+                  <input type="text" name="cardholderName" placeholder="Name on Card" required
+                    [class.border-red-500]="errors['cardholderName']"
+                    class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <p *ngIf="errors['cardholderName']" class="text-red-500 text-sm mt-1">
+                    {{ errors['cardholderName'] }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="paymentMethod === 'cod'" class="p-4 border rounded-lg bg-gray-50">
+            <div class="flex items-start space-x-2">
+              <div class="text-sm text-gray-600">
+                <p class="font-semibold mb-2">Cash on Delivery Terms:</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li>Payment will be collected at the time of delivery</li>
+                  <li>Please keep exact change ready if possible</li>
+                  <li>Cash and UPI payments accepted</li>
+                  <li>Additional fee of Rs. 50 applies for COD orders</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1">
+      <div class="border rounded-lg p-6 space-y-6 sticky top-28">
+        <h2 class="text-xl font-semibold">Order Summary</h2>
+
+        <div class="space-y-4">
+          <div *ngFor="let item of cart" class="flex space-x-4">
+            <div class="w-16 h-16 rounded-lg overflow-hidden">
+              <img [src]="item.images[0]" [alt]="item.name" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold">{{ item.name }}</h3>
+              <div class="text-sm text-gray-600">
+                Quantity: {{ item.quantity }}
+                <span *ngIf="item.size"> | Size: {{ item.size }}</span>
+              </div>
+              <div class="font-semibold">Rs. {{ item.price }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span>Rs. {{ subtotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Shipping</span>
+            <span>Rs. {{ shipping | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Tax</span>
+            <span>Rs. {{ tax | number:'1.2-2' }}</span>
+          </div>
+          <div *ngIf="paymentMethod === 'cod'" class="flex justify-between text-gray-600">
+            <span>COD Fee</span>
+            <span>Rs. 50.00</span>
+          </div>
+          <div class="h-px bg-gray-200 my-2"></div>
+          <div class="flex justify-between font-bold text-lg">
+            <span>Total</span>
+            <span>Rs. {{ total + (paymentMethod === 'cod' ? 50 : 0) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-4 rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2">
+          <i class="fas fa-shopping-bag w-5 h-5"></i>
+          <span>Place Order</span>
+        </button>
+
+        <p class="text-sm text-gray-600 text-center">
+          {{ paymentMethod === 'credit'
+          ? 'Your payment information is encrypted and secure'
+          : 'Payment will be collected upon delivery' }}
+        </p>
+      </div>
+    </div>
+  </form>
+</div>

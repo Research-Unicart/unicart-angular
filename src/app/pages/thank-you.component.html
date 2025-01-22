@@ -1,0 +1,97 @@
+<div class="max-w-4xl mx-auto px-4 py-12">
+  <div class="text-center mb-8">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-green-600" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 11l3 3L22 4M22 12a9 9 0 11-9-9 9 9 0 019 9z" />
+      </svg>
+
+    </div>
+    <h1 class="text-3xl font-bold mb-2">Thank You for Your Order!</h1>
+    <p class="text-gray-600 mb-4">
+      Order #{{ orderNumber }} has been successfully placed
+    </p>
+    <p class="text-gray-600">
+      A confirmation email has been sent to {{ orderDetails.email }}
+    </p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+    <div class="space-y-4">
+      <div *ngFor="let item of orderDetails.cart" class="flex items-center space-x-4">
+        <img [src]="item.images[0]" alt="{{ item.name }}" class="w-16 h-16 object-cover rounded" />
+        <div class="flex-1">
+          <h3 class="font-semibold">{{ item.name }}</h3>
+          <p class="text-gray-600">
+            Quantity: {{ item.quantity }}
+            <span *ngIf="item.size"> | Size: {{ item.size }}</span>
+          </p>
+        </div>
+        <p class="font-semibold">Rs. {{ (item.price * item.quantity) | number:'1.2-2' }}</p>
+      </div>
+
+      <div class="border-t pt-4 mt-4">
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Subtotal</span>
+          <span>Rs. {{ orderDetails.subtotal | number:'1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Shipping</span>
+          <span>Rs. {{ orderDetails.shipping | number:'1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Tax</span>
+          <span>Rs. {{ orderDetails.tax | number:'1.2-2' }}</span>
+        </div>
+        <div class="flex justify-between font-bold text-lg">
+          <span>Total</span>
+          <span>Rs. {{ orderDetails.total | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-semibold mb-4">Shipping Details</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <h3 class="font-semibold mb-2">Delivery Address</h3>
+        <p class="text-gray-600">
+          {{ orderDetails.shippingAddress?.street }}
+          <br />
+          {{ orderDetails.shippingAddress?.city }}, {{ orderDetails.shippingAddress?.state }}
+          {{ orderDetails.shippingAddress?.zip }}
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-2">Shipping Method</h3>
+        <p class="text-gray-600">
+          {{ orderDetails.shippingMethod === 'express' ? 'Express Shipping (2-3 business days)' : 'Standard Shipping
+          (4-5 business days)' }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-between">
+    <button (click)="navigateToProducts()" class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 hover:text-blue-800" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5M12 5l-7 7 7 7" />
+      </svg>
+
+      <span>Continue Shopping</span>
+    </button>
+    <button (click)="handlePrintOrder()" class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 hover:text-blue-800" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M6 3H18a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2zm0 0v4h12V3M6 19h12v2H6z" />
+      </svg>
+
+      <span>Print Order</span>
+    </button>
+  </div>
+</div>

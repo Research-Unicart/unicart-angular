@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-gray-50">
+  <header class="sticky top-0 bg-white shadow-sm z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a routerLink="/" class="flex-shrink-0">
+          <h1 class="text-2xl font-bold text-gray-900">Uni-Cart</h1>
+        </a>
+
+        <div class="flex-1 max-w-lg mx-8">
+          <div class="relative">
+            <input type="text" placeholder="Search products..."
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              (keypress)="handleSearch($event)" />
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 absolute right-3 top-2.5  text-gray-400 hover:text-gray-900" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 4a7 7 0 100 14 7 7 0 000-14zM16.293 16.293l4 4M18 11a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <nav class="flex items-center space-x-8">
+          <a routerLink="/cart" class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-900" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3v2h2l3 9h8l3-9h2V3H6z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18" />
+              <circle cx="12" cy="19" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              <circle cx="19" cy="19" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+            </svg>
+            <span
+              class="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+              {{ cartItemCount }}
+            </span>
+          </a>
+          <a href="/account">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-900" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </a>
+        </nav>
+      </div>
+
+      <div class="py-2 border-t">
+        <nav class="flex space-x-8">
+          <a *ngFor="let page of pages" [routerLink]="'/' + page.toLowerCase()"
+            class="text-gray-600 hover:text-gray-900">
+            {{ page }}
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="bg-gray-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">About Us</h3>
+          <p class="text-gray-400">
+            Your trusted source for quality products.
+          </p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/shipping">Shipping Info</a></li>
+            <li><a href="/returns">Returns</a></li>
+            <li><a href="/faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="/products">All Products</a></li>
+            <li><a href="/deals">Deals</a></li>
+            <li><a href="/new">New Arrivals</a></li>
+            <li><a href="/trending">Trending</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+          <div class="flex">
+            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-l-lg text-gray-900" />
+            <button class="bg-blue-600 px-4 py-2 rounded-r-lg hover:bg-blue-700">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

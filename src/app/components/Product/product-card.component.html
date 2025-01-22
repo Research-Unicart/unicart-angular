@@ -1,0 +1,64 @@
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col justify-between h-full cursor-pointer"
+  (click)="handleCardClick()">
+  <div class="relative">
+    <img [src]="displayImage" [alt]="product.name" class="w-full h-48 object-cover" />
+    <div *ngIf="isOutOfStock" class="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm">
+      Out of Stock
+    </div>
+    <button class="absolute top-2 right-2 p-1.5 bg-white rounded-full hover:bg-gray-100"
+      (click)="$event.stopPropagation()" aria-label="Add to wishlist">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 21l-1-1-7-7a5 5 0 017-7 5 5 0 017 7l-7 7-1 1z" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="p-4 flex-1">
+    <div class="text-sm text-gray-500 mb-1">{{ product.category }}</div>
+    <h3 class="text-lg font-semibold mb-2 line-clamp-2">{{ product.name }}</h3>
+
+    <div class="flex items-center mb-2">
+      <ng-container *ngFor="let _ of [1, 2, 3, 4, 5]; let i = index">
+        <span [ngClass]="{
+            'text-yellow-400': i < (numericRating || 0),
+            'text-gray-300': i >= (numericRating || 0)
+          }" class="text-sm">
+          ★
+        </span>
+      </ng-container>
+
+      <span class="text-sm text-gray-500 ml-1">({{ numericRating }})</span>
+    </div>
+
+    <div class="flex justify-between items-center">
+      <span class="text-xl font-bold">
+        {{ (priceRange?.min === priceRange?.max)
+        ? 'Rs. ' + priceRange?.min
+        : 'Rs. ' + priceRange?.min + ' - ' + priceRange?.max }}
+      </span>
+
+    </div>
+  </div>
+
+  <div class="flex justify-center m-4">
+    <button (click)="handleShopNow($event)" [disabled]="isOutOfStock" [ngClass]="{
+        'bg-gray-300 cursor-not-allowed': isOutOfStock,
+        'bg-blue-600 hover:bg-blue-700 text-white': !isOutOfStock
+      }" class="flex items-center gap-2 px-4 py-2 rounded-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex items-center" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3v2h2l3 9h8l3-9h2V3H6z" />
+        <circle cx="12" cy="19" r="1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+        <circle cx="19" cy="19" r="1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+      </svg>
+
+      {{ isOutOfStock
+      ? 'Out of Stock'
+      : product.has_variations
+      ? 'View Options'
+      : 'Shop Now' }}
+    </button>
+  </div>
+</div>

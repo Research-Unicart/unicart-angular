@@ -1,0 +1,51 @@
+<nav *ngIf="totalPages > 1" class="flex items-center justify-center space-x-2">
+  <button
+    (click)="onPageChange(currentPage - 1)"
+    [disabled]="currentPage === 1"
+    class="p-2 rounded-lg border"
+    aria-label="Previous page"
+  >
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <ng-container *ngIf="getPageNumbers()[0] > 1">
+    <button
+      (click)="onPageChange(1)"
+      class="px-4 py-2 rounded-lg border"
+    >
+      1
+    </button>
+    <span *ngIf="getPageNumbers()[0] > 2" class="px-2 text-gray-500">...</span>
+  </ng-container>
+
+  <button
+    *ngFor="let page of getPageNumbers()"
+    (click)="onPageChange(page)"
+    class="px-4 py-2 rounded-lg border"
+  >
+    {{ page }}
+  </button>
+
+  <ng-container *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages">
+    <span *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1" class="px-2 text-gray-500">...</span>
+    <button
+      (click)="onPageChange(totalPages)"
+      class="px-4 py-2 rounded-lg border"
+    >
+      {{ totalPages }}
+    </button>
+  </ng-container>
+
+  <button
+    (click)="onPageChange(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+    class="p-2 rounded-lg border"
+    aria-label="Next page"
+  >
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+</nav>
