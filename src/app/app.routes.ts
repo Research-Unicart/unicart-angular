@@ -7,8 +7,13 @@ import { CartPageComponent } from './pages/cart-page.component';
 import { CheckoutComponent } from './pages/checkout.component';
 import { SingleProductComponent } from './pages/single-product.component';
 import { ThankYouComponent } from './pages/thank-you.component';
+import { UserProfileComponent } from './pages/user-profile.component';
+import { LoginComponent } from './pages/login.component';
+import { RegisterComponent } from './pages/register.component';
 
 export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   {
     path: '',
     component: MainLayoutComponent,
@@ -19,7 +24,8 @@ export const routes: Routes = [
       { path: 'cart', component: CartPageComponent },
       { path: 'checkout', component: CheckoutComponent },
       { path: 'thank-you', component: ThankYouComponent },
-      { path: '**', component: ComingSoonComponent }
-    ]
-  }
+      { path: 'profile', component: UserProfileComponent },
+      { path: '**', component: ComingSoonComponent },
+    ],
+  },
 ];

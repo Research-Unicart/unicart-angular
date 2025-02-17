@@ -11,6 +11,10 @@ import { CartPageComponent } from './pages/cart-page.component';
 import { CheckoutComponent } from './pages/checkout.component';
 import { SingleProductComponent } from './pages/single-product.component';
 import { ThankYouComponent } from './pages/thank-you.component';
+import { LoginComponent } from './pages/login.component';
+import { RegisterComponent } from './pages/register.component';
+import { UserProfileComponent } from './pages/user-profile.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,6 +28,10 @@ export const appConfig: ApplicationConfig = {
     CartPageComponent,
     CheckoutComponent,
     ThankYouComponent,
+    UserProfileComponent,
     provideHttpClient(),
-  ]
+    provideAnimationsAsync('noop'),
+    LoginComponent,
+    RegisterComponent,
+  ],
 };

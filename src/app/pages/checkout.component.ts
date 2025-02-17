@@ -3,7 +3,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../context/cart.service';
+import { AuthContextService } from '../context/auth.service';
+import { OrderService } from '../services/product.service';
+import { lastValueFrom } from 'rxjs';
 
+const formatCartItems = (cart: any[]) => {
+  return cart.map((item) => ({
+    productId: item.id,
+    quantity: item.quantity,
+    variationId: item.variation ? item.variation.id : null,
+  }));
+};
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
@@ -15,6 +25,7 @@ export class CheckoutComponent implements OnInit {
   shippingMethod: string = 'standard';
   paymentMethod: string = 'credit';
   errors: any = {};
+  isLoading: boolean = false;
   formData: {
     [key in
       | 'firstName'
@@ -40,12 +51,24 @@ export class CheckoutComponent implements OnInit {
   cardData: any;
   window: any;
 
-  constructor(private router: Router, private cartService: CartService) {}
+  constructor(
+    private router: Router,
+    private cartService: CartService,
+    private authContext: AuthContextService,
+    private orderService: OrderService
+  ) {}
 
   ngOnInit(): void {
     this.cart = this.cartService.getCart();
-  }
+    if (this.cart.length === 0) {
+      this.router.navigate(['/']);
+    }
 
+    const user = this.authContext.getUser();
+    if (!user) {
+      this.router.navigate(['/login']);
+    }
+  }
   get subtotal() {
     return this.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
@@ -157,62 +180,102 @@ export class CheckoutComponent implements OnInit {
     event.target.value = event.target.value.replace(/\D/g, '');
   }
 
-  handleSubmit(event: Event) {
+  async handleSubmit(event: Event) {
     event.preventDefault();
-
-    if (this.paymentMethod === 'credit') {
-      const cardNumber = (event.target as any).cardNumber.value;
-      const expiry = (event.target as any).expiry.value;
-      const cvv = (event.target as any).cvv.value;
-      const cardholderName = (event.target as any).cardholderName.value;
-
-      const cardErrors = this.validateCard(
-        cardNumber,
-        expiry,
-        cvv,
-        cardholderName
-      );
-
-      if (Object.keys(cardErrors).length > 0) {
-        this.errors = cardErrors;
-        const firstErrorField = document.querySelector(
-          `[name="${Object.keys(cardErrors)[0]}"]`
-        ) as HTMLElement;
-        firstErrorField?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-        return;
-      }
-    }
-
+    this.isLoading = true;
     this.errors = {};
 
-    const orderDetails = {
-      cart: this.cart,
-      subtotal: this.subtotal,
-      shipping: this.shipping,
-      tax: this.tax,
-      total: this.total,
-      email: this.formData.email,
-      shippingAddress: {
-        street: this.formData.street,
-        apartment: this.formData.apartment,
-        city: this.formData.city,
-        state: this.formData.state,
-        zip: this.formData.zip,
-      },
-      shippingMethod: this.shippingMethod,
-      customerInfo: {
-        firstName: this.formData.firstName,
-        lastName: this.formData.lastName,
-        phone: this.formData.phone,
-      },
-    };
+    const user = this.authContext.getUser();
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
-    localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
+    try {
+      if (this.paymentMethod === 'credit') {
+        const cardNumber = (event.target as any).cardNumber.value;
+        const expiry = (event.target as any).expiry.value;
+        const cvv = (event.target as any).cvv.value;
+        const cardholderName = (event.target as any).cardholderName.value;
 
-    this.cartService.clearCart();
-    this.router.navigate(['/thank-you']);
+        const cardErrors = this.validateCard(
+          cardNumber,
+          expiry,
+          cvv,
+          cardholderName
+        );
+
+        if (Object.keys(cardErrors).length > 0) {
+          this.errors = cardErrors;
+          const firstErrorField = document.querySelector(
+            `[name="${Object.keys(cardErrors)[0]}"]`
+          ) as HTMLElement;
+          firstErrorField?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+          return;
+        }
+      }
+
+      this.errors = {};
+
+      const orderDetails = {
+        cart: this.cart,
+        subtotal: this.subtotal,
+        shipping: this.shipping,
+        tax: this.tax,
+        total: this.total,
+        email: this.formData.email,
+        shippingAddress: {
+          street: this.formData.street,
+          apartment: this.formData.apartment,
+          city: this.formData.city,
+          state: this.formData.state,
+          zip: this.formData.zip,
+        },
+        shippingMethod: this.shippingMethod,
+        customerInfo: {
+          firstName: this.formData.firstName,
+          lastName: this.formData.lastName,
+          phone: this.formData.phone,
+        },
+      };
+
+      localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
+
+      const orderData = {
+        userId: user?.user?.id,
+        cart: formatCartItems(this.cart),
+        paymentMethod: this.paymentMethod,
+        status: 'Pending',
+        shippingAddress: {
+          street: this.formData.street,
+          apartment: this.formData.apartment,
+          city: this.formData.city,
+          state: this.formData.state,
+          zip: this.formData.zip,
+        },
+        customerInfo: {
+          firstName: this.formData.firstName,
+          lastName: this.formData.lastName,
+          email: this.formData.email,
+          phone: this.formData.phone,
+        },
+      };
+      await lastValueFrom(this.orderService.createOrder(orderData));
+
+      console.log('Order placed:', orderData);
+
+      this.cartService.clearCart();
+      this.router.navigate(['/thank-you']);
+    } catch (error: any) {
+      console.error('Order placement error:', error);
+      this.errors.submit =
+        error.response?.data?.message ||
+        'An error occurred while placing your order';
+    } finally {
+      this.isLoading = false;
+    }
   }
 }
