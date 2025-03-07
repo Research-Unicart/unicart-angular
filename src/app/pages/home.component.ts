@@ -36,8 +36,8 @@ export class HomeComponent implements OnInit {
           .filter((product: any) => product)
           .map((product: any) => ({
             ...product,
-            specs: this.safeJSONParse(product.specs),
-            images: this.safeJSONParse(product.images),
+            specs: (product.specs),
+            images: (product.images),
             rating: parseFloat(product.rating),
             base_price: parseFloat(product.base_price),
           }))
